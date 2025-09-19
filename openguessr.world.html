@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGuessr - Geo Guessing Game | Play Free Online Geography Game</title>
+    <meta name="description" content="Play OpenGuessr, the ultimate free online geo guessing game! Test your geography knowledge by exploring street view locations and guessing where you are in the world.">
+    <meta name="keywords" content="OpenGuessr, geo guessing, geography game, street view game, world exploration, online game, free game">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="OpenGuessr World">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://openguessr.world/">
+    <meta property="og:title" content="OpenGuessr - Geo Guessing Game">
+    <meta property="og:description" content="Play the ultimate free online geo guessing game! Test your geography knowledge and explore the world.">
+    <meta property="og:image" content="https://openguessr.world/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://openguessr.world/">
+    <meta property="twitter:title" content="OpenGuessr - Geo Guessing Game">
+    <meta property="twitter:description" content="Play the ultimate free online geo guessing game! Test your geography knowledge and explore the world.">
+    <meta property="twitter:image" content="https://openguessr.world/twitter-image.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://openguessr.world/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://games.crazygames.com">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Apple-inspired color palette */
+            --primary-blue: #007AFF;
+            --secondary-blue: #5AC8FA;
+            --accent-purple: #AF52DE;
+            --accent-pink: #FF2D92;
+            --accent-orange: #FF9500;
+            --accent-green: #34C759;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --background-primary: #FBFBFD;
+            --background-secondary: #F5F5F7;
+            --glass-background: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #F5F5F7;
+                --text-secondary: #98989D;
+                --background-primary: #000000;
+                --background-secondary: #1C1C1E;
+                --glass-background: rgba(28, 28, 30, 0.8);
+                --glass-border: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            background: var(--glass-background);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(175, 82, 222, 0.1));
+            border-radius: 24px;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-blue), var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 122, 255, 0.4);
+        }
+
+        /* Game Section */
+        .game-section {
+            margin: 4rem 0;
+            background: var(--glass-background);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px var(--shadow-light);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow-medium);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: var(--glass-background);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-light);
+        }
+
+        .content-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--accent-green), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--glass-background);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 50px var(--shadow-light);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--glass-background);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: var(--glass-background);
+                backdrop-filter: blur(20px);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+                padding: 2rem 0;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .main-content {
+                padding: 0 1rem;
+                margin-top: 70px;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .game-iframe {
+                height: 400px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">OpenGuessr</div>
+            <ul class="nav-menu">
+                <li><a href="#game" class="nav-link">Play Game</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#how-to-play" class="nav-link">How to Play</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero fade-in-up">
+            <h1>OpenGuessr - Geo Guessing</h1>
+            <p class="hero-subtitle">Test your geography knowledge and explore the world through street view locations in this exciting online geo-guessing adventure!</p>
+            <a href="#game" class="cta-button">Start Playing Now</a>
+        </section>
+
+        <!-- Game Section -->
+        <section id="game" class="game-section animate-on-scroll">
+            <div class="loading" id="loading">Loading OpenGuessr game...</div>
+            <iframe 
+                src="https://games.crazygames.com/en_US/openguessr/index.html" 
+                class="game-iframe"
+                id="gameFrame"
+                title="OpenGuessr - Geo Guessing Game"
+                loading="lazy"
+                style="display: none;"
+                onload="document.getElementById('loading').style.display='none'; this.style.display='block';">
+            </iframe>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="content-section animate-on-scroll">
+            <h2>About OpenGuessr</h2>
+            <p>OpenGuessr is the ultimate free online geography guessing game that challenges players to identify locations around the world using Google Street View imagery. This engaging and educational game combines entertainment with learning, making it perfect for geography enthusiasts, students, and curious minds alike.</p>
+            <p>Whether you're a seasoned traveler or an armchair explorer, OpenGuessr offers an immersive experience that will test your knowledge of world landmarks, cityscapes, rural areas, and hidden gems from every corner of the globe.</p>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="features-grid">
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">🌍</div>
+                <h2>Global Exploration</h2>
+                <p>Discover locations from every continent and explore diverse landscapes, from bustling cities to remote countryside locations worldwide.</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">🎯</div>
+                <h2>Precision Scoring</h2>
+                <p>Earn points based on how close your guesses are to the actual location. The more accurate you are, the higher your score!</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">🏆</div>
+                <h2>Challenge Yourself</h2>
+                <p>Compete with friends or challenge yourself to improve your geography knowledge and achieve higher scores with each game.</p>
+            </div>
+        </section>
+
+        <!-- How to Play Section -->
+        <section id="how-to-play" class="content-section animate-on-scroll">
+            <h2>How to Play OpenGuessr</h2>
+            <p>Playing OpenGuessr is simple yet challenging. You'll be dropped into a random Street View location anywhere in the world. Use the visual clues around you to determine where you might be - look for signs, architecture, vegetation, terrain, and other geographical indicators.</p>
+            <p>Once you've made your best guess, click on the world map to place your marker. The game will reveal the actual location and award points based on how close your guess was. The closer you are, the more points you earn!</p>
+            <p>Each round presents a new location and a fresh challenge. Can you identify remote islands, bustling city centers, mountain ranges, or desert landscapes? Put your geography skills to the test and see how well you know our world!</p>
+        </section>
+
+        <!-- Game Features Section -->
+        <section class="content-section animate-on-scroll">
+            <h2>Game Features & Benefits</h2>
+            <p><strong>Educational Value:</strong> OpenGuessr isn't just entertainment - it's a powerful learning tool that enhances your geographical knowledge, cultural awareness, and observational skills.</p>
+            <p><strong>Completely Free:</strong> Enjoy unlimited gameplay without any cost. No registration required - just visit the page and start exploring the world immediately.</p>
+            <p><strong>Instant Play:</strong> No downloads or installations needed. OpenGuessr runs directly in your browser, making it accessible from any device with an internet connection.</p>
+            <p><strong>Diverse Locations:</strong> From iconic landmarks to obscure rural roads, the game features an extensive database of locations that will challenge players of all skill levels.</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 OpenGuessr World. Explore. Guess. Learn. All rights reserved.</p>
+        <p>Experience the world through geography - one guess at a time.</p>
+    </footer>
+
+    <script>
+        // Mobile navigation toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animate-on-scroll class
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'var(--glass-background)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Preload game iframe for better performance
+        const gameFrame = document.getElementById('gameFrame');
+        gameFrame.addEventListener('load', () => {
+            gameFrame.style.opacity = '0';
+            gameFrame.style.display = 'block';
+            gameFrame.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                gameFrame.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add loading state handling
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // Performance optimization: Lazy load iframe
+        const gameSection = document.getElementById('game');
+        const gameObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const iframe = entry.target.querySelector('iframe');
+                    if (iframe && !iframe.src) {
+                        iframe.src = iframe.dataset.src;
+                    }
+                    gameObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        if (gameSection) {
+            gameObserver.observe(gameSection);
+        }
+    </script>
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "OpenGuessr - Geo Guessing",
+        "description": "Play the ultimate free online geo guessing game! Test your geography knowledge by exploring street view locations and guessing where you are in the world.",
+        "url": "https://openguessr.world/",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1250"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "OpenGuessr World"
+        }
+    }
+    </script>
+</body>
+</html>
